@@ -1,0 +1,14 @@
+import { chromium } from '@playwright/test';
+const browser = await chromium.launch();
+const page = await browser.newPage();
+await page.goto('https://gian-lucca-ranch-8v0d4x968-simplebalance89-ais-projects.vercel.app/', { waitUntil: 'networkidle' });
+await page.waitForTimeout(2000);
+const svgs = await page.locator('svg').count();
+const heart = await page.locator('svg[data-lucide="Heart"]').count();
+const menu = await page.locator('svg[data-lucide="Menu"]').count();
+console.log('Total SVGs:', svgs);
+console.log('Heart icons:', heart);
+console.log('Menu icons:', menu);
+const footerText = await page.locator('footer').textContent();
+console.log('Footer:', footerText?.slice(0, 100));
+await browser.close();

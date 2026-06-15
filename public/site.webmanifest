@@ -1,0 +1,16 @@
+{
+  "name": "Gian Lucca's Ranch",
+  "short_name": "GL Ranch",
+  "description": "A sunny ranch world built with love by Daddy",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbf7f0",
+  "theme_color": "#8b9a7c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
