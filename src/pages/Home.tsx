@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
+import { playAnimalSound } from "../lib/sounds";
 
 const friends = [
   {
@@ -115,9 +116,24 @@ export default function Home() {
         />
 
         {/* Side emojis */}
-        <span className="absolute hidden sm:inline-block text-[40px] left-[5%] top-[20%]">🐻</span>
-        <span className="absolute hidden sm:inline-block text-[40px] left-[5%] top-[50%]">🐔</span>
-        <span className="absolute hidden sm:inline-block text-[40px] right-[5%] top-[25%]">🦃</span>
+        <button
+          type="button"
+          onClick={() => playAnimalSound("bear")}
+          className="absolute hidden sm:inline-block text-[40px] left-[5%] top-[20%] hover:scale-110 transition-transform cursor-pointer"
+          aria-label="Bear sound"
+        >🐻</button>
+        <button
+          type="button"
+          onClick={() => playAnimalSound("chicken")}
+          className="absolute hidden sm:inline-block text-[40px] left-[5%] top-[50%] hover:scale-110 transition-transform cursor-pointer"
+          aria-label="Chicken sound"
+        >🐔</button>
+        <button
+          type="button"
+          onClick={() => playAnimalSound("turkey")}
+          className="absolute hidden sm:inline-block text-[40px] right-[5%] top-[25%] hover:scale-110 transition-transform cursor-pointer"
+          aria-label="Turkey sound"
+        >🦃</button>
         <span className="absolute hidden sm:inline-block text-[40px] right-[5%] top-[55%]">🏠</span>
 
         {/* Ranch scene + title */}
@@ -179,9 +195,17 @@ export default function Home() {
           <SectionTitle eyebrow="🌟 YOUR RANCH FRIENDS" title="Meet Your Animal Friends" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
             {friends.map((friend) => (
-              <div key={friend.name} className="group cursor-pointer">
+              <div
+                key={friend.name}
+                className="group cursor-pointer"
+                onClick={() => playAnimalSound(friend.name)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && playAnimalSound(friend.name)}
+                aria-label={`Play ${friend.name} sound`}
+              >
                 <div
-                  className="rounded-card overflow-hidden shadow-soft group-hover:shadow-hover transition-shadow duration-200"
+                  className="rounded-card overflow-hidden shadow-soft group-hover:shadow-hover transition-all duration-200 active:scale-[0.98]"
                   style={{
                     background:
                       "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(251, 247, 240, 0.95) 100%)",
@@ -195,7 +219,7 @@ export default function Home() {
                     <img
                       src={friend.image}
                       alt={friend.name}
-                      className="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105 group-active:scale-95"
                     />
                   </div>
                   <div className="p-5 text-center">
