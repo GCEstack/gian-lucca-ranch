@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #fbf7f0;
+  --color-sage-green: #8b9a7c;
+  --color-dark-brown: #3d3229;
+  --color-soft-brown: #6b5b4f;
+  --color-golden-honey: #e8c547;
+  --color-warm-terracotta: #d4865a;
+  --color-light-sand: #f3ede4;
+  --color-warm-white: #ffffff;
+  --color-barn-red: #c4554a;
+  --color-soft-sky: #a8c8d8;
+  --color-hover-green: #7a8b6b;
+  --color-active-terracotta: #c07548;
+
+  --font-fredoka: "Fredoka", cursive;
+  --font-quicksand: "Quicksand", sans-serif;
+  --font-caveat: "Caveat", cursive;
+
+  --radius-card: 20px;
+  --radius-button: 50px;
+
+  --shadow-elevated: 0 12px 40px rgba(107, 91, 79, 0.18);
+  --shadow-soft: 0 4px 20px rgba(107, 91, 79, 0.08);
+  --shadow-hover: 0 8px 30px rgba(107, 91, 79, 0.15);
+}
+
+@utility font-fredoka {
+  font-family: var(--font-fredoka);
+}
+
+@utility font-quicksand {
+  font-family: var(--font-quicksand);
+}
+
+@utility font-caveat {
+  font-family: var(--font-caveat);
+}
+
+@utility rounded-card {
+  border-radius: var(--radius-card);
+}
+
+@utility rounded-button {
+  border-radius: var(--radius-button);
+}
+
+@utility shadow-elevated {
+  box-shadow: var(--shadow-elevated);
+}
+
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+@utility shadow-hover {
+  box-shadow: var(--shadow-hover);
+}
+
+@utility bg-cream {
+  background-color: var(--color-cream);
+}
+
+@utility bg-sage-green {
+  background-color: var(--color-sage-green);
+}
+
+@utility bg-dark-brown {
+  background-color: var(--color-dark-brown);
+}
+
+@utility bg-light-sand {
+  background-color: var(--color-light-sand);
+}
+
+@utility text-dark-brown {
+  color: var(--color-dark-brown);
+}
+
+@utility text-soft-brown {
+  color: var(--color-soft-brown);
+}
+
+@utility text-sage-green {
+  color: var(--color-sage-green);
+}
+
+@utility text-golden-honey {
+  color: var(--color-golden-honey);
+}
+
+@utility text-warm-terracotta {
+  color: var(--color-warm-terracotta);
+}
+
+@utility text-cream {
+  color: var(--color-cream);
+}
+
+@utility bg-golden-honey {
+  background-color: var(--color-golden-honey);
+}
+
+@utility border-sage-green {
+  border-color: var(--color-sage-green);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-quicksand);
+  background-color: var(--color-cream);
+  color: var(--color-dark-brown);
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+/* Hide scrollbar for carousels while keeping functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

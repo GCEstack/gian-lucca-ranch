@@ -1,7 +1,8 @@
 {
   "version": 2,
   "public": true,
-  "outputDirectory": ".",
+  "framework": "vite",
+  "outputDirectory": "dist",
   "github": {
     "enabled": false
   }
