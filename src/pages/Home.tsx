@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { MapPin, Play, Pause } from "lucide-react";
 import { playAnimalSound } from "../lib/sounds";
 
 const friends = [
@@ -73,14 +73,130 @@ function SectionTitle({
   );
 }
 
+const stories = [
+  {
+    id: "sleepy-bear",
+    title: "The Sleepy Little Bear",
+    description: "A heartwarming bedtime story about a little bear who can't fall asleep.",
+    emoji: "🐻",
+    category: "Bedtime",
+    src: "/audio/story_sleepy_bear.m4a",
+    duration: 43,
+  },
+  {
+    id: "benny-adventure",
+    title: "Benny Bear's Adventure",
+    description: "Join Benny Bear on an exciting journey through the ranch!",
+    emoji: "🐻",
+    category: "Adventure",
+    src: "/audio/story_benny_adventure.m4a",
+    duration: 36,
+  },
+  {
+    id: "chicken-dance",
+    title: "Chicken Dance Party",
+    description: "Get ready to dance with the chickens in this fun-filled story!",
+    emoji: "🐔",
+    category: "Fun",
+    src: "/audio/story_chicken_dance.m4a",
+    duration: 32,
+  },
+  {
+    id: "tommy-turkey",
+    title: "Tommy Turkey's Day",
+    description: "Spend a day with Tommy Turkey and learn about gratitude.",
+    emoji: "🦃",
+    category: "Gratitude",
+    src: "/audio/story_tommy_turkey.m4a",
+    duration: 33,
+  },
+  {
+    id: "ranch-morning",
+    title: "Ranch Morning Routine",
+    description: "See what mornings are like on Gian Lucca's Ranch!",
+    emoji: "🌅",
+    category: "Routine",
+    src: "/audio/story_ranch_morning.m4a",
+    duration: 33,
+  },
+  {
+    id: "starlight-lullaby",
+    title: "Starlight Lullaby",
+    description: "A soothing journey among the stars.",
+    emoji: "🌙",
+    category: "Bedtime",
+    src: "/audio/story_starlight_lullaby.m4a",
+    duration: 44,
+  },
+];
+
 export default function Home() {
   const [temp, setTemp] = useState(75);
   const heroRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [activeStory, setActiveStory] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const t = Math.floor(Math.random() * (78 - 70 + 1)) + 70;
     setTemp(t);
   }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setProgress(audio.currentTime);
+    const updateDuration = () => setDuration(audio.duration);
+    const onEnded = () => {
+      setIsPlaying(false);
+      setProgress(0);
+    };
+
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", updateDuration);
+    audio.addEventListener("ended", onEnded);
+    return () => {
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("loadedmetadata", updateDuration);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, [activeStory]);
+
+  const toggleStory = (id: string, src: string) => {
+    if (activeStory === id) {
+      const audio = audioRef.current;
+      if (audio) {
+        if (isPlaying) {
+          audio.pause();
+          setIsPlaying(false);
+        } else {
+          audio.play().catch(() => {});
+          setIsPlaying(true);
+        }
+      }
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      const audio = new Audio(src);
+      audioRef.current = audio;
+      setActiveStory(id);
+      setProgress(0);
+      setDuration(0);
+      audio.play().catch(() => {});
+      setIsPlaying(true);
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    if (!isFinite(seconds) || isNaN(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   return (
     <div>
@@ -270,6 +386,92 @@ export default function Home() {
             <p className="text-center font-quicksand text-sm text-soft-brown/70 mt-4">
               ← Slide to explore →
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Story Time Collection */}
+      <section className="py-16 sm:py-24 bg-cream">
+        <div className="max-w-[900px] mx-auto px-4 sm:px-6">
+          <SectionTitle eyebrow="📖 STORY TIME" title="Daddy's Story Collection" />
+          <div className="mt-10 space-y-4">
+            {stories.map((story) => {
+              const playing = activeStory === story.id && isPlaying;
+              const currentProgress = activeStory === story.id ? progress : 0;
+              const currentDuration = activeStory === story.id ? duration : story.duration;
+              const pct = currentDuration ? (currentProgress / currentDuration) * 100 : 0;
+
+              return (
+                <div
+                  key={story.id}
+                  className="bg-white rounded-card shadow-soft p-4 sm:p-5 transition-all duration-200 hover:shadow-md"
+                  style={{ border: "2px solid rgba(139, 154, 124, 0.15)" }}
+                >
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => toggleStory(story.id, story.src)}
+                      className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-transform duration-200 active:scale-95 hover:scale-105"
+                      style={{ backgroundColor: "var(--color-warm-terracotta)" }}
+                      aria-label={playing ? "Pause story" : "Play story"}
+                    >
+                      {playing ? (
+                        <Pause className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-white" />
+                      ) : (
+                        <Play className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-white ml-0.5" />
+                      )}
+                    </button>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center flex-wrap gap-2 mb-0.5">
+                        <span className="text-xl">{story.emoji}</span>
+                        <h3 className="font-fredoka text-lg sm:text-xl text-dark-brown">
+                          {story.title}
+                        </h3>
+                      </div>
+                      <p className="font-quicksand text-sm text-soft-brown leading-snug">
+                        {story.description}
+                      </p>
+                    </div>
+
+                    <div className="flex-shrink-0 text-right">
+                      <span
+                        className="inline-block font-quicksand text-xs font-semibold px-2.5 py-1 rounded-full mb-1"
+                        style={{
+                          backgroundColor: "rgba(139, 154, 124, 0.12)",
+                          color: "var(--color-sage-green)",
+                        }}
+                      >
+                        {story.category}
+                      </span>
+                      <p className="font-quicksand text-xs text-soft-brown/70">
+                        {formatTime(currentDuration)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {activeStory === story.id && (
+                    <div className="mt-3">
+                      <div
+                        className="h-2 rounded-full overflow-hidden"
+                        style={{ backgroundColor: "rgba(139, 154, 124, 0.15)" }}
+                      >
+                        <div
+                          className="h-full rounded-full transition-all duration-100"
+                          style={{
+                            width: `${pct}%`,
+                            backgroundColor: "var(--color-warm-terracotta)",
+                          }}
+                        />
+                      </div>
+                      <div className="flex justify-between mt-1 font-quicksand text-xs text-soft-brown/70">
+                        <span>{formatTime(currentProgress)}</span>
+                        <span>{formatTime(currentDuration)}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

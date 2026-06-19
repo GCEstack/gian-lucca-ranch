@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+# Gian Lucca's Ranch
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A magical, interactive ranch website built just for Gian Lucca. It features animal friends, bedtime stories, learning games, music, and videos — all wrapped in a warm, kid-friendly design.
 
-Currently, two official plugins are available:
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=white)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- 🏠 **Home** — Welcome hero, ranch friends, explore cards, and Daddy's story collection with an audio player.
+- 🎬 **Videos** — Watch "The Sleepy Little Bear" and other ranch adventures.
+- 🎨 **Learning** — ABCs, numbers, colors, shapes, and interactive quizzes.
+- 📖 **Stories** — Read-along stories with generated narration.
+- 🎵 **Music** — Listen to original songs like *Gianluca Love*.
+- 🔊 **Synthesized Animal Sounds** — Bear growl, chicken cluck, and turkey gobble using the Web Audio API (no external sound files needed).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- [Vite](https://vitejs.dev/) for fast development and builds
+- [React 19](https://react.dev/) with TypeScript
+- [React Router](https://reactrouter.com/) for client-side navigation
+- [Tailwind CSS v4](https://tailwindcss.com/) for styling
+- [ElevenLabs](https://elevenlabs.io/) for story narration generation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# Install dependencies
+npm install
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Start the development server
+npm run dev
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Generating Story Audio
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Stories can be narrated with ElevenLabs. Copy `.env.example` to `.env` and add your credentials:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
 ```
+
+Edit `.env` with your ElevenLabs API key and voice ID, then run:
+
+```bash
+node scripts/generate-stories.mjs
+```
+
+## Project Structure
+
+```
+├── public/              # Static assets and audio files
+├── scripts/             # Story generation scripts
+├── src/
+│   ├── components/      # Layout, Navbar, Footer
+│   ├── lib/             # Sound utilities
+│   ├── pages/           # Home, Videos, Learning, Stories, Music
+│   ├── index.css        # Tailwind theme and custom utilities
+│   └── main.tsx         # App entry point with hash router
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+## Deployment
+
+This project is configured for deployment on [Vercel](https://vercel.com/) using the Vite framework preset.
+
+---
+
+Made with ❤️ for Gian Lucca.

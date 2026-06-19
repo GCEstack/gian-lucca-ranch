@@ -16,6 +16,7 @@
     "react-router-dom": "^7.17.0"
   },
   "devDependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.53.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.60.0",
     "@tailwindcss/vite": "^4.3.1",
