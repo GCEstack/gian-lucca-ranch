@@ -11,98 +11,123 @@ function generateBubbleStyles(count: number) {
   }));
 }
 
-const featured = {
-  title: "The Sleepy Little Bear",
-  description:
-    "A heartwarming bedtime story about a little bear who can't fall asleep. Join him on a gentle journey through the forest as he discovers the secrets of a peaceful night's rest. Perfect for bedtime!",
-  duration: "3:26",
-  tags: ["Bedtime 🌙", "Bears 🐻", "3:26 ⏱️"],
-  poster: "/sleepy-bear-story.png",
-  src: "/videos/sleepy_little_bear.mp4",
-};
+function formatDuration(seconds: number) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
 
-const stories = [
+const allVideos = [
   {
-    title: "🐻 The Sleepy Little Bear",
-    desc: "A heartwarming bedtime story about a little bear who can't fall asleep.",
+    id: "sleepy-little-bear",
+    title: "The Sleepy Little Bear",
+    emoji: "🐻",
+    description:
+      "A heartwarming bedtime story about a little bear who can't fall asleep. Join him on a gentle journey through the forest as he discovers the secrets of a peaceful night's rest. Perfect for bedtime!",
     image: "/sleepy-bear-story.png",
+    poster: "/sleepy-bear-story.png",
+    src: "/videos/sleepy_little_bear.mp4",
     tag: "Bedtime",
-    duration: "3:26",
-    soon: false,
+    durationSeconds: 206,
+    tags: ["Bedtime 🌙", "Bears 🐻", "3:26 ⏱️"],
   },
+  {
+    id: "rainy-day-parade",
+    title: "The Rainy Day Parade",
+    emoji: "🌧️",
+    description:
+      "When rain ruins the picnic, friends turn it into the best adventure ever! A story about finding joy when plans change.",
+    image: "/story-rainy-day-parade.png",
+    poster: "/story-rainy-day-parade.png",
+    src: "/videos/story_rainy_day_parade.mp4",
+    tag: "Adventure",
+    durationSeconds: 225,
+    tags: ["Adventure 🌧️", "Friends 🐻🐔🦃", "3:45 ⏱️"],
+  },
+  {
+    id: "great-honey-harvest",
+    title: "The Great Honey Harvest",
+    emoji: "🍯",
+    description:
+      "The most special day of the year — collecting golden honey with friends! A story about teamwork, gratitude, and sweet rewards.",
+    image: "/story-great-honey-harvest.png",
+    poster: "/story-great-honey-harvest.png",
+    src: "/videos/story_great_honey_harvest.mp4",
+    tag: "Celebration",
+    durationSeconds: 229,
+    tags: ["Celebration 🍯", "Teamwork 🤝", "3:49 ⏱️"],
+  },
+  {
+    id: "night-under-stars",
+    title: "Benny's Night Under the Stars",
+    emoji: "⭐",
+    description:
+      "Daddy takes Benny camping for the very first time. A magical night of stars, fireflies, and feeling safe.",
+    image: "/story-night-under-stars.png",
+    poster: "/story-night-under-stars.png",
+    src: "/videos/story_night_under_stars.mp4",
+    tag: "Bedtime",
+    durationSeconds: 230,
+    tags: ["Bedtime ⭐", "Camping 🏕️", "3:50 ⏱️"],
+  },
+];
+
+const comingSoonStories = [
   {
     title: "🐻 Benny Bear's Adventure",
     desc: "Join Benny Bear on an exciting journey through the ranch!",
     image: "/bear-friend.png",
     tag: "Adventure",
-    duration: "",
-    soon: true,
   },
   {
     title: "🐔 Chicken Dance Party",
     desc: "Get ready to dance with the chickens in this fun-filled video!",
     image: "/chickens-friends.png",
     tag: "Fun",
-    duration: "",
-    soon: true,
   },
   {
     title: "🦃 Tommy Turkey's Day",
     desc: "Spend a day with Tommy Turkey and learn about gratitude.",
     image: "/turkey-friends.png",
     tag: "Holiday",
-    duration: "",
-    soon: true,
   },
   {
     title: "🌅 Ranch Morning Routine",
     desc: "See what mornings are like on Gian Lucca's Ranch!",
     image: "/ranch-house.png",
     tag: "Daily Life",
-    duration: "",
-    soon: true,
   },
   {
     title: "🌙 Starlight Lullaby",
     desc: "A soothing visual journey among the stars.",
     image: "/sleepy-bear-story.png",
     tag: "Bedtime",
-    duration: "",
-    soon: true,
-  },
-  {
-    title: "🌧️ The Rainy Day Parade",
-    desc: "When rain ruins the picnic, friends turn it into the best adventure ever!",
-    image: "/story-rainy-day-parade.png",
-    tag: "Adventure",
-    duration: "",
-    soon: true,
-  },
-  {
-    title: "🍯 The Great Honey Harvest",
-    desc: "The most special day of the year — collecting golden honey with friends!",
-    image: "/story-great-honey-harvest.png",
-    tag: "Celebration",
-    duration: "",
-    soon: true,
-  },
-  {
-    title: "⭐ Benny's Night Under the Stars",
-    desc: "Daddy takes Benny camping for the very first time. A magical night!",
-    image: "/story-night-under-stars.png",
-    tag: "Bedtime",
-    duration: "",
-    soon: true,
   },
 ];
 
 export default function Videos() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [liked, setLiked] = useState(false);
   const bubbleStyles = useMemo(() => generateBubbleStyles(20), []);
+
+  const featured = allVideos[selectedIndex];
+
+  const selectVideo = (index: number) => {
+    setSelectedIndex(index);
+    setPlaying(false);
+    setProgress(0);
+    setCurrentTime(0);
+    setLiked(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+      videoRef.current.load();
+    }
+  };
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -191,12 +216,14 @@ export default function Videos() {
             <div className="relative w-full rounded-[20px] overflow-hidden bg-dark-brown aspect-video">
               <video
                 ref={videoRef}
+                key={featured.src}
                 src={featured.src}
                 poster={featured.poster}
                 className="absolute inset-0 w-full h-full object-cover"
                 onTimeUpdate={handleTimeUpdate}
                 onEnded={() => setPlaying(false)}
                 onClick={togglePlay}
+                playsInline
               />
 
               {!playing && (
@@ -237,7 +264,7 @@ export default function Videos() {
                   </div>
                 </div>
                 <span className="font-quicksand text-xs text-white flex-shrink-0 hidden sm:inline">
-                  {featured.duration}
+                  {formatDuration(featured.durationSeconds)}
                 </span>
                 <button className="flex items-center justify-center cursor-pointer flex-shrink-0 text-white hover:text-golden-honey">
                   <Volume2 className="w-5 h-5" />
@@ -248,7 +275,7 @@ export default function Videos() {
             <div className="max-w-[900px] mx-auto mt-6 sm:mt-8">
               <div className="flex items-center gap-3 mb-3">
                 <h3 className="font-fredoka text-xl sm:text-[28px] font-medium flex-1 text-dark-brown">
-                  🐻 {featured.title}
+                  {featured.emoji} {featured.title}
                 </h3>
                 <button
                   onClick={() => setLiked(!liked)}
@@ -296,44 +323,63 @@ export default function Videos() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {stories.map((story) => (
-              <div key={story.title} className="group cursor-pointer">
+            {allVideos.map((video, index) => (
+              <button
+                key={video.id}
+                onClick={() => selectVideo(index)}
+                className={`group text-left ${
+                  selectedIndex === index ? "ring-2 ring-sage-green rounded-[20px]" : ""
+                }`}
+              >
                 <div className="bg-white rounded-[20px] overflow-hidden h-full shadow-soft hover:shadow-hover transition-shadow duration-200">
+                  <div className="relative overflow-hidden aspect-[4/3]">
+                    <img
+                      src={video.image}
+                      alt={video.title}
+                      className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-80 group-hover:opacity-100 transition-opacity">
+                      <span className="flex items-center justify-center rounded-full bg-white/90 group-hover:bg-white transition-colors w-12 h-12">
+                        <Play className="w-5 h-5 text-dark-brown ml-0.5" fill="currentColor" />
+                      </span>
+                    </div>
+                    <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md font-quicksand text-xs text-white bg-black/50">
+                      {formatDuration(video.durationSeconds)}
+                    </span>
+                  </div>
+                  <div className="p-4">
+                    <h4 className="font-fredoka text-lg mb-1 line-clamp-2 text-dark-brown">
+                      {video.title}
+                    </h4>
+                    <p className="font-quicksand text-sm mb-2 text-soft-brown">{video.description}</p>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full font-quicksand text-xs font-medium bg-sage-green/10 text-sage-green">
+                      {video.tag}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            ))}
+            {comingSoonStories.map((story) => (
+              <div key={story.title} className="group">
+                <div className="bg-white rounded-[20px] overflow-hidden h-full shadow-soft transition-shadow duration-200">
                   <div className="relative overflow-hidden aspect-[4/3]">
                     <img
                       src={story.image}
                       alt={story.title}
-                      className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
+                      className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-80 group-hover:opacity-100 transition-opacity">
-                      {story.soon ? (
-                        <span className="inline-flex items-center px-3 py-1.5 rounded-full font-quicksand text-xs font-semibold bg-white/90 text-dark-brown">
-                          Coming Soon! ⭐
-                        </span>
-                      ) : (
-                        <span className="flex items-center justify-center rounded-full bg-white/90 group-hover:bg-white transition-colors w-12 h-12">
-                          <Play className="w-5 h-5 text-dark-brown ml-0.5" fill="currentColor" />
-                        </span>
-                      )}
-                    </div>
-                    {!story.soon && (
-                      <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md font-quicksand text-xs text-white bg-black/50">
-                        {story.duration}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-80 transition-opacity">
+                      <span className="inline-flex items-center px-3 py-1.5 rounded-full font-quicksand text-xs font-semibold bg-white/90 text-dark-brown">
+                        Coming Soon! ⭐
                       </span>
-                    )}
+                    </div>
                   </div>
                   <div className="p-4">
                     <h4 className="font-fredoka text-lg mb-1 line-clamp-2 text-dark-brown">
                       {story.title}
                     </h4>
                     <p className="font-quicksand text-sm mb-2 text-soft-brown">{story.desc}</p>
-                    {story.soon ? (
-                      <span className="font-quicksand text-sm text-soft-brown/50">Coming soon...</span>
-                    ) : (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full font-quicksand text-xs font-medium bg-sage-green/10 text-sage-green">
-                        {story.tag}
-                      </span>
-                    )}
+                    <span className="font-quicksand text-sm text-soft-brown/50">Coming soon...</span>
                   </div>
                 </div>
               </div>
