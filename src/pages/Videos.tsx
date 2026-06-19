@@ -30,6 +30,7 @@ const allVideos = [
     tag: "Bedtime",
     durationSeconds: 206,
     tags: ["Bedtime 🌙", "Bears 🐻", "3:26 ⏱️"],
+    soon: false,
   },
   {
     id: "rainy-day-parade",
@@ -41,8 +42,9 @@ const allVideos = [
     poster: "/story-rainy-day-parade.png",
     src: "/videos/story_rainy_day_parade.mp4",
     tag: "Adventure",
-    durationSeconds: 225,
-    tags: ["Adventure 🌧️", "Friends 🐻🐔🦃", "3:45 ⏱️"],
+    durationSeconds: 272,
+    tags: ["Adventure 🌧️", "Friends 🐻🐔🦃", "4:32 ⏱️"],
+    soon: false,
   },
   {
     id: "great-honey-harvest",
@@ -54,8 +56,9 @@ const allVideos = [
     poster: "/story-great-honey-harvest.png",
     src: "/videos/story_great_honey_harvest.mp4",
     tag: "Celebration",
-    durationSeconds: 229,
-    tags: ["Celebration 🍯", "Teamwork 🤝", "3:49 ⏱️"],
+    durationSeconds: 225,
+    tags: ["Celebration 🍯", "Teamwork 🤝", "3:45 ⏱️"],
+    soon: false,
   },
   {
     id: "night-under-stars",
@@ -67,46 +70,85 @@ const allVideos = [
     poster: "/story-night-under-stars.png",
     src: "/videos/story_night_under_stars.mp4",
     tag: "Bedtime",
-    durationSeconds: 230,
-    tags: ["Bedtime ⭐", "Camping 🏕️", "3:50 ⏱️"],
+    durationSeconds: 228,
+    tags: ["Bedtime ⭐", "Camping 🏕️", "3:48 ⏱️"],
+    soon: false,
   },
-];
-
-const comingSoonStories = [
   {
-    title: "🐻 Benny Bear's Adventure",
-    desc: "Join Benny Bear on an exciting journey through the ranch!",
+    id: "benny-adventure",
+    title: "Benny Bear's Adventure",
+    emoji: "🐻",
+    description:
+      "Join Benny Bear on an exciting journey through the ranch! From morning discoveries to afternoon surprises, every day is an adventure.",
     image: "/bear-friend.png",
+    poster: "/bear-friend.png",
+    src: "/videos/story_benny_adventure.mp4",
     tag: "Adventure",
+    durationSeconds: 67,
+    tags: ["Adventure 🐻", "Ranch 🌾", "1:07 ⏱️"],
+    soon: false,
   },
   {
-    title: "🐔 Chicken Dance Party",
-    desc: "Get ready to dance with the chickens in this fun-filled video!",
+    id: "chicken-dance",
+    title: "Chicken Dance Party",
+    emoji: "🐔",
+    description:
+      "Get ready to dance with the chickens in this fun-filled video! Clucky and the crew throw the best dance party on the ranch.",
     image: "/chickens-friends.png",
+    poster: "/chickens-friends.png",
+    src: "/videos/story_chicken_dance.mp4",
     tag: "Fun",
+    durationSeconds: 45,
+    tags: ["Fun 🐔", "Dance 💃", "0:45 ⏱️"],
+    soon: false,
   },
   {
-    title: "🦃 Tommy Turkey's Day",
-    desc: "Spend a day with Tommy Turkey and learn about gratitude.",
+    id: "tommy-turkey",
+    title: "Tommy Turkey's Day",
+    emoji: "🦃",
+    description:
+      "Spend a day with Tommy Turkey and learn about gratitude. A colorful story about appreciating the little things on the ranch.",
     image: "/turkey-friends.png",
+    poster: "/turkey-friends.png",
+    src: "/videos/story_tommy_turkey.mp4",
     tag: "Holiday",
+    durationSeconds: 44,
+    tags: ["Holiday 🦃", "Gratitude 💝", "0:44 ⏱️"],
+    soon: false,
   },
   {
-    title: "🌅 Ranch Morning Routine",
-    desc: "See what mornings are like on Gian Lucca's Ranch!",
+    id: "ranch-morning",
+    title: "Ranch Morning Routine",
+    emoji: "🌅",
+    description:
+      "See what mornings are like on Gian Lucca's Ranch! From sunrise to breakfast, the ranch wakes up with joy and wonder.",
     image: "/ranch-house.png",
+    poster: "/ranch-house.png",
+    src: "/videos/story_ranch_morning.mp4",
     tag: "Daily Life",
+    durationSeconds: 44,
+    tags: ["Daily Life 🌅", "Ranch 🌾", "0:44 ⏱️"],
+    soon: false,
   },
   {
-    title: "🌙 Starlight Lullaby",
-    desc: "A soothing visual journey among the stars.",
+    id: "starlight-lullaby",
+    title: "Starlight Lullaby",
+    emoji: "🌙",
+    description:
+      "A soothing visual journey among the stars. The ranch friends drift off to sleep under a sky full of twinkling dreams.",
     image: "/sleepy-bear-story.png",
+    poster: "/sleepy-bear-story.png",
+    src: "/videos/story_starlight_lullaby.mp4",
     tag: "Bedtime",
+    durationSeconds: 50,
+    tags: ["Bedtime 🌙", "Stars ⭐", "0:50 ⏱️"],
+    soon: false,
   },
 ];
 
 export default function Videos() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playableVideos = useMemo(() => allVideos.filter((v) => !v.soon), []);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -114,7 +156,7 @@ export default function Videos() {
   const [liked, setLiked] = useState(false);
   const bubbleStyles = useMemo(() => generateBubbleStyles(20), []);
 
-  const featured = allVideos[selectedIndex];
+  const featured = playableVideos[selectedIndex] || playableVideos[0];
 
   const selectVideo = (index: number) => {
     setSelectedIndex(index);
@@ -127,6 +169,10 @@ export default function Videos() {
       videoRef.current.currentTime = 0;
       videoRef.current.load();
     }
+  };
+
+  const isPlayableSelected = (videoId: string) => {
+    return playableVideos[selectedIndex]?.id === videoId;
   };
 
   const togglePlay = () => {
@@ -204,7 +250,7 @@ export default function Videos() {
               ⭐ FEATURED STORY
             </span>
             <h2 className="font-fredoka text-3xl sm:text-4xl font-medium mb-3 text-dark-brown">
-              {featured.title}
+              {featured.emoji} {featured.title}
             </h2>
             <div
               className="w-[60px] h-[3px] mx-auto rounded-full"
@@ -323,72 +369,78 @@ export default function Videos() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {allVideos.map((video, index) => (
-              <button
-                key={video.id}
-                onClick={() => selectVideo(index)}
-                className={`group text-left ${
-                  selectedIndex === index ? "ring-2 ring-sage-green rounded-[20px]" : ""
-                }`}
-              >
-                <div className="bg-white rounded-[20px] overflow-hidden h-full shadow-soft hover:shadow-hover transition-shadow duration-200">
-                  <div className="relative overflow-hidden aspect-[4/3]">
-                    <img
-                      src={video.image}
-                      alt={video.title}
-                      className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-80 group-hover:opacity-100 transition-opacity">
-                      <span className="flex items-center justify-center rounded-full bg-white/90 group-hover:bg-white transition-colors w-12 h-12">
-                        <Play className="w-5 h-5 text-dark-brown ml-0.5" fill="currentColor" />
-                      </span>
-                    </div>
-                    <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md font-quicksand text-xs text-white bg-black/50">
-                      {formatDuration(video.durationSeconds)}
-                    </span>
-                  </div>
-                  <div className="p-4">
-                    <h4 className="font-fredoka text-lg mb-1 line-clamp-2 text-dark-brown">
-                      {video.title}
-                    </h4>
-                    <p className="font-quicksand text-sm mb-2 text-soft-brown">{video.description}</p>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full font-quicksand text-xs font-medium bg-sage-green/10 text-sage-green">
-                      {video.tag}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            ))}
-            {comingSoonStories.map((story) => (
-              <div key={story.title} className="group">
-                <div className="bg-white rounded-[20px] overflow-hidden h-full shadow-soft transition-shadow duration-200">
-                  <div className="relative overflow-hidden aspect-[4/3]">
-                    <img
-                      src={story.image}
-                      alt={story.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-80 transition-opacity">
-                      <span className="inline-flex items-center px-3 py-1.5 rounded-full font-quicksand text-xs font-semibold bg-white/90 text-dark-brown">
-                        Coming Soon! ⭐
-                      </span>
+            {allVideos.map((video) => {
+              if (video.soon) {
+                return (
+                  <div key={video.id} className="group">
+                    <div className="bg-white rounded-[20px] overflow-hidden h-full shadow-soft transition-shadow duration-200">
+                      <div className="relative overflow-hidden aspect-[4/3]">
+                        <img
+                          src={video.image}
+                          alt={video.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-80 transition-opacity">
+                          <span className="inline-flex items-center px-3 py-1.5 rounded-full font-quicksand text-xs font-semibold bg-white/90 text-dark-brown">
+                            Coming Soon! ⭐
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h4 className="font-fredoka text-lg mb-1 line-clamp-2 text-dark-brown">
+                          {video.emoji} {video.title}
+                        </h4>
+                        <p className="font-quicksand text-sm mb-2 text-soft-brown">{video.description}</p>
+                        <span className="font-quicksand text-sm text-soft-brown/50">Coming soon...</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <h4 className="font-fredoka text-lg mb-1 line-clamp-2 text-dark-brown">
-                      {story.title}
-                    </h4>
-                    <p className="font-quicksand text-sm mb-2 text-soft-brown">{story.desc}</p>
-                    <span className="font-quicksand text-sm text-soft-brown/50">Coming soon...</span>
+                );
+              }
+
+              const playableIndex = playableVideos.findIndex((v) => v.id === video.id);
+              return (
+                <button
+                  key={video.id}
+                  onClick={() => selectVideo(playableIndex)}
+                  className={`group text-left ${
+                    isPlayableSelected(video.id) ? "ring-2 ring-sage-green rounded-[20px]" : ""
+                  }`}
+                >
+                  <div className="bg-white rounded-[20px] overflow-hidden h-full shadow-soft hover:shadow-hover transition-shadow duration-200">
+                    <div className="relative overflow-hidden aspect-[4/3]">
+                      <img
+                        src={video.image}
+                        alt={video.title}
+                        className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-80 group-hover:opacity-100 transition-opacity">
+                        <span className="flex items-center justify-center rounded-full bg-white/90 group-hover:bg-white transition-colors w-12 h-12">
+                          <Play className="w-5 h-5 text-dark-brown ml-0.5" fill="currentColor" />
+                        </span>
+                      </div>
+                      <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md font-quicksand text-xs text-white bg-black/50">
+                        {formatDuration(video.durationSeconds)}
+                      </span>
+                    </div>
+                    <div className="p-4">
+                      <h4 className="font-fredoka text-lg mb-1 line-clamp-2 text-dark-brown">
+                        {video.title}
+                      </h4>
+                      <p className="font-quicksand text-sm mb-2 text-soft-brown">{video.description}</p>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full font-quicksand text-xs font-medium bg-sage-green/10 text-sage-green">
+                        {video.tag}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* More coming soon */}
+      {/* Recording status */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 bg-cream">
         <div className="max-w-[800px] mx-auto">
           <div
@@ -397,11 +449,10 @@ export default function Videos() {
           >
             <span className="block text-5xl sm:text-[56px] mb-4">🎬</span>
             <h3 className="font-fredoka text-xl sm:text-[28px] mb-3 text-dark-brown">
-              More Stories Coming Soon!
+              Story Collection Complete!
             </h3>
             <p className="font-quicksand text-base sm:text-lg max-w-[500px] mx-auto text-soft-brown">
-              Daddy is recording more bedtime stories just for you. Check back soon for new
-              adventures!
+              All {playableVideos.length} stories are ready to watch. Grab some honey tea and enjoy!
             </p>
           </div>
         </div>

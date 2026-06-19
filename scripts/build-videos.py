@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
 """
-Build story videos from image sequences + voice recordings using ffmpeg.
+Build ALL story videos from image sequences + voice recordings using ffmpeg.
+Each scene is shown for an equal share of the audio duration, so no audio is cut off.
 
 Usage:
     python scripts/build-videos.py
 
 Requires:
-    - ffmpeg installed and on PATH
-    - Scene images in public/story-scenes/<story>/
+    - Scene images in public/story-scenes/<story>/ (10 scenes each)
     - Audio files in public/audio/
 
 Output:
-    - public/videos/story_rainy_day_parade.mp4
-    - public/videos/story_great_honey_harvest.mp4
-    - public/videos/story_night_under_stars.mp4
+    - public/videos/story_*.mp4 for all stories with audio + scenes
 """
 
 import os
@@ -21,14 +19,18 @@ import subprocess
 import sys
 from pathlib import Path
 
+try:
+    import imageio_ffmpeg
+    FFMPEG_EXE = imageio_ffmpeg.get_ffmpeg_exe()
+except Exception:
+    FFMPEG_EXE = os.environ.get("FFMPEG_PATH", "ffmpeg")
+
 BASE = Path(__file__).parent.parent
 SCENES = BASE / "public" / "story-scenes"
 VIDEOS = BASE / "public" / "videos"
 AUDIO = BASE / "public" / "audio"
 
 VIDEOS.mkdir(exist_ok=True)
-
-FFMPEG_EXE = os.environ.get("FFMPEG_PATH", "ffmpeg")
 
 
 def check_ffmpeg():
@@ -39,16 +41,30 @@ def check_ffmpeg():
         return False
 
 
-def build_video(story_name, audio_file, output_file, scene_duration=18.0, fade_duration=0.5):
+def get_duration(path: Path) -> float:
+    result = subprocess.run(
+        [FFMPEG_EXE, "-i", str(path)],
+        capture_output=True,
+        text=True,
+    )
+    for line in result.stderr.splitlines():
+        if "Duration:" in line:
+            time_str = line.split("Duration:")[1].split(",")[0].strip()
+            h, m, s = time_str.split(":")
+            return int(h) * 3600 + int(m) * 60 + float(s)
+    raise RuntimeError(f"Could not determine duration for {path}")
+
+
+def build_video(story_name, audio_file, output_file):
     """
-    Build a video from 10 scene images + audio using ffmpeg xfade filter.
+    Build a video from 10 scene images + audio using ffmpeg concat demuxer.
+    Scene duration is calculated from the audio so nothing gets cut.
     """
     scene_dir = SCENES / story_name
     if not scene_dir.exists():
         print(f"ERROR: Scene directory not found: {scene_dir}")
         return False
 
-    # Collect scene images (scene-01.png through scene-10.png)
     scene_files = []
     for i in range(1, 11):
         f = scene_dir / f"scene-{i:02d}.png"
@@ -68,44 +84,16 @@ def build_video(story_name, audio_file, output_file, scene_duration=18.0, fade_d
         print(f"  Then run this script again.")
         return False
 
-    # Build filter_complex for xfade transitions
-    # We need a black placeholder video at the start because xfade needs two inputs
-    inputs = ["-f", "lavfi", "-i", f"color=c=black:s=800x450:d=0.1"]
-    for sf in scene_files:
-        inputs.extend(["-i", sf])
-    inputs.extend(["-i", str(audio_path)])
+    audio_duration = get_duration(audio_path)
+    scene_duration = audio_duration / 10
+    print(f"  Audio duration: {audio_duration:.2f}s -> scene duration: {scene_duration:.2f}s")
 
-    audio_idx = len(scene_files) + 1
-
-    # Build xfade chain
-    filter_parts = []
-    prev = "0:v"
-    for i in range(1, len(scene_files) + 1):
-        offset = scene_duration * (i - 1) + (scene_duration - fade_duration) * (i > 1)
-        if i == 1:
-            offset = scene_duration - fade_duration
-        else:
-            offset = (scene_duration * (i - 1)) - (fade_duration * (i - 1))
-        
-        # Simpler: each scene starts at (i-1)*scene_duration, crossfade at boundaries
-        offset = (i - 1) * scene_duration - (fade_duration if i > 1 else 0)
-        if i == 1:
-            offset = scene_duration - fade_duration
-        
-        # Actually, let's use a simpler concat approach with fade
-        # Use the concat approach instead which is more reliable
-        pass
-
-    # Simpler approach: use concat demuxer with a file list
-    # Each scene is shown for scene_duration seconds
     concat_file = VIDEOS / f"{story_name}_concat.txt"
     with open(concat_file, "w") as f:
         for sf in scene_files:
             f.write(f"file '{sf}'\n")
             f.write(f"duration {scene_duration}\n")
-        # Last frame needs duration too for concat
         f.write(f"file '{scene_files[-1]}'\n")
-        f.write(f"duration {scene_duration}\n")
 
     output = VIDEOS / output_file
 
@@ -115,7 +103,7 @@ def build_video(story_name, audio_file, output_file, scene_duration=18.0, fade_d
         "-safe", "0",
         "-i", str(concat_file),
         "-i", str(audio_path),
-        "-vf", f"fps=30,scale=800:450:force_original_aspect_ratio=decrease,pad=800:450:(ow-iw)/2:(oh-ih)/2,format=yuv420p",
+        "-vf", "fps=30,scale=800:450:force_original_aspect_ratio=decrease,pad=800:450:(ow-iw)/2:(oh-ih)/2,format=yuv420p",
         "-c:v", "libx264",
         "-crf", "23",
         "-preset", "fast",
@@ -135,27 +123,55 @@ def build_video(story_name, audio_file, output_file, scene_duration=18.0, fade_d
     print(f"Output: {output}")
 
     result = subprocess.run(cmd, capture_output=True, text=True)
+    concat_file.unlink(missing_ok=True)
     if result.returncode != 0:
         print(f"ERROR building {story_name}:")
         print(result.stderr)
         return False
-    else:
-        print(f"SUCCESS: {output}")
-        # Clean up concat file
-        concat_file.unlink(missing_ok=True)
-        return True
+
+    # Safety trim: concat demuxer can add a trailing frame; ensure video matches audio
+    tmp_output = output.with_suffix(".trimmed.mp4")
+    trim_cmd = [
+        FFMPEG_EXE, "-y",
+        "-i", str(output),
+        "-i", str(audio_path),
+        "-map", "0:v:0",
+        "-map", "1:a:0",
+        "-c:v", "copy",
+        "-c:a", "copy",
+        "-t", str(audio_duration),
+        "-shortest",
+        str(tmp_output),
+    ]
+    trim_result = subprocess.run(trim_cmd, capture_output=True, text=True)
+    if trim_result.returncode != 0:
+        print(f"ERROR trimming {story_name}:")
+        print(trim_result.stderr)
+        return False
+    tmp_output.replace(output)
+
+    final_duration = get_duration(output)
+    print(f"SUCCESS: {output} ({final_duration:.2f}s)")
+    return True
 
 
 def main():
     if not check_ffmpeg():
-        print("ERROR: ffmpeg not found. Please install ffmpeg and add it to your PATH.")
-        print("Download: https://ffmpeg.org/download.html")
+        print("ERROR: ffmpeg not found.")
+        print("Install ffmpeg or set FFMPEG_PATH environment variable.")
         sys.exit(1)
 
     stories = [
+        # (scene_dir_name, audio_filename, output_filename)
+        ("sleepy-little-bear", "story_sleepy_bear.m4a", "story_sleepy_little_bear.mp4"),
         ("rainy-day-parade", "story_rainy_day_parade.m4a", "story_rainy_day_parade.mp4"),
         ("great-honey-harvest", "story_great_honey_harvest.m4a", "story_great_honey_harvest.mp4"),
         ("night-under-stars", "story_night_under_stars.m4a", "story_night_under_stars.mp4"),
+        ("benny-adventure", "story_benny_adventure.m4a", "story_benny_adventure.mp4"),
+        ("chicken-dance", "story_chicken_dance.m4a", "story_chicken_dance.mp4"),
+        ("tommy-turkey", "story_tommy_turkey.m4a", "story_tommy_turkey.mp4"),
+        ("ranch-morning", "story_ranch_morning.m4a", "story_ranch_morning.mp4"),
+        ("starlight-lullaby", "story_starlight_lullaby.m4a", "story_starlight_lullaby.mp4"),
     ]
 
     results = []
