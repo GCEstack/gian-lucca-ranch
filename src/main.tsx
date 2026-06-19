@@ -9,6 +9,7 @@ import Learning from "./pages/Learning";
 import Stories from "./pages/Stories";
 import Music from "./pages/Music";
 import Companion from "./pages/Companion";
+import Family from "./pages/Family";
 
 const router = createHashRouter([
   {
@@ -21,6 +22,7 @@ const router = createHashRouter([
       { path: "stories", element: <Stories /> },
       { path: "music", element: <Music /> },
       { path: "companion", element: <Companion /> },
+      { path: "family", element: <Family /> },
     ],
   },
 ]);
