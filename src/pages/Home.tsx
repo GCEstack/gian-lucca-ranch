@@ -402,6 +402,62 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Pick Your Lotso Italiano */}
+      <section className="py-16 sm:py-20 bg-cream">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+          <div className="text-center mb-10">
+            <span className="font-quicksand text-sm font-semibold uppercase tracking-[0.05em] text-sage-green block mb-3">
+              🍓 BA BA BA
+            </span>
+            <h2 className="font-fredoka text-3xl sm:text-[40px] font-medium text-dark-brown">
+              Pick Your Lotso Italiano
+            </h2>
+            <div
+              className="w-[60px] h-[3px] rounded-full mx-auto mt-4"
+              style={{ backgroundColor: "var(--color-golden-honey)" }}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
+            {[
+              {
+                src: "/lotso/lotso_baby.png",
+                name: "Baby Lotso",
+                desc: "The cutest strawberry in the crib 🍼",
+              },
+              {
+                src: "/lotso/lotso_mobster.png",
+                name: "Gentleman Lotso",
+                desc: "Classy, cozy, and always polite 🎩",
+              },
+              {
+                src: "/lotso/lotso.png",
+                name: "Boss Lotso",
+                desc: "The original strawberry don 🍓",
+              },
+            ].map((lotso) => (
+              <div
+                key={lotso.name}
+                className="bg-white rounded-[20px] overflow-hidden shadow-soft hover:shadow-hover transition-shadow duration-200"
+              >
+                <div className="relative overflow-hidden aspect-square">
+                  <img
+                    src={lotso.src}
+                    alt={lotso.name}
+                    className="w-full h-full object-cover transition-transform duration-400 hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-4 text-center">
+                  <h3 className="font-fredoka text-lg text-dark-brown">{lotso.name}</h3>
+                  <p className="font-quicksand text-sm text-soft-brown">{lotso.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Explore the Ranch */}
       <section className="py-16 sm:py-24" style={{ backgroundColor: "var(--color-light-sand)" }}>
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
