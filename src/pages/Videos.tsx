@@ -30,7 +30,7 @@ const allVideos = [
     tag: "Bedtime",
     durationSeconds: 206,
     tags: ["Bedtime 🌙", "Bears 🐻", "3:26 ⏱️"],
-    soon: false,
+    soon: true,
   },
   {
     id: "rainy-day-parade",
@@ -58,7 +58,7 @@ const allVideos = [
     tag: "Celebration",
     durationSeconds: 225,
     tags: ["Celebration 🍯", "Teamwork 🤝", "3:45 ⏱️"],
-    soon: false,
+    soon: true,
   },
   {
     id: "night-under-stars",
@@ -72,7 +72,7 @@ const allVideos = [
     tag: "Bedtime",
     durationSeconds: 228,
     tags: ["Bedtime ⭐", "Camping 🏕️", "3:48 ⏱️"],
-    soon: false,
+    soon: true,
   },
   {
     id: "benny-adventure",
@@ -100,7 +100,7 @@ const allVideos = [
     tag: "Fun",
     durationSeconds: 45,
     tags: ["Fun 🐔", "Dance 💃", "0:45 ⏱️"],
-    soon: false,
+    soon: true,
   },
   {
     id: "tommy-turkey",
@@ -114,7 +114,7 @@ const allVideos = [
     tag: "Holiday",
     durationSeconds: 44,
     tags: ["Holiday 🦃", "Gratitude 💝", "0:44 ⏱️"],
-    soon: false,
+    soon: true,
   },
   {
     id: "ranch-morning",
@@ -128,7 +128,7 @@ const allVideos = [
     tag: "Daily Life",
     durationSeconds: 44,
     tags: ["Daily Life 🌅", "Ranch 🌾", "0:44 ⏱️"],
-    soon: false,
+    soon: true,
   },
   {
     id: "starlight-lullaby",
@@ -142,7 +142,7 @@ const allVideos = [
     tag: "Bedtime",
     durationSeconds: 50,
     tags: ["Bedtime 🌙", "Stars ⭐", "0:50 ⏱️"],
-    soon: false,
+    soon: true,
   },
 ];
 
@@ -462,10 +462,10 @@ export default function Videos() {
           >
             <span className="block text-5xl sm:text-[56px] mb-4">🎬</span>
             <h3 className="font-fredoka text-xl sm:text-[28px] mb-3 text-dark-brown">
-              Story Collection Complete!
+              More Stories Coming Soon!
             </h3>
             <p className="font-quicksand text-base sm:text-lg max-w-[500px] mx-auto text-soft-brown">
-              All {playableVideos.length} stories are ready to watch. Grab some honey tea and enjoy!
+              {playableVideos.length} stories ready with Daddy's voice. More voice recordings coming soon!
             </p>
           </div>
         </div>
