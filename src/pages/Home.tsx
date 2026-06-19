@@ -82,6 +82,7 @@ const stories = [
     category: "Bedtime",
     src: "/audio/story_sleepy_bear.m4a",
     duration: 58,
+    soon: true,
   },
   {
     id: "benny-adventure",
@@ -91,6 +92,7 @@ const stories = [
     category: "Adventure",
     src: "/audio/story_benny_adventure.m4a",
     duration: 50,
+    soon: false,
   },
   {
     id: "chicken-dance",
@@ -100,6 +102,7 @@ const stories = [
     category: "Fun",
     src: "/audio/story_chicken_dance.m4a",
     duration: 46,
+    soon: true,
   },
   {
     id: "tommy-turkey",
@@ -109,6 +112,7 @@ const stories = [
     category: "Gratitude",
     src: "/audio/story_tommy_turkey.m4a",
     duration: 44,
+    soon: true,
   },
   {
     id: "ranch-morning",
@@ -118,6 +122,7 @@ const stories = [
     category: "Routine",
     src: "/audio/story_ranch_morning.m4a",
     duration: 46,
+    soon: true,
   },
   {
     id: "starlight-lullaby",
@@ -127,6 +132,7 @@ const stories = [
     category: "Bedtime",
     src: "/audio/story_starlight_lullaby.m4a",
     duration: 47,
+    soon: true,
   },
   {
     id: "rainy-day-parade",
@@ -136,6 +142,7 @@ const stories = [
     category: "Fun",
     src: "/audio/story_rainy_day_parade.m4a",
     duration: 225,
+    soon: false,
   },
   {
     id: "great-honey-harvest",
@@ -145,6 +152,7 @@ const stories = [
     category: "Celebration",
     src: "/audio/story_great_honey_harvest.m4a",
     duration: 229,
+    soon: true,
   },
   {
     id: "night-under-stars",
@@ -154,6 +162,7 @@ const stories = [
     category: "Bedtime",
     src: "/audio/story_night_under_stars.m4a",
     duration: 230,
+    soon: true,
   },
 ];
 
@@ -524,27 +533,40 @@ export default function Home() {
               return (
                 <div
                   key={story.id}
-                  className="bg-white rounded-card shadow-soft p-4 sm:p-5 transition-all duration-200 hover:shadow-md"
+                  className={`rounded-card shadow-soft p-4 sm:p-5 transition-all duration-200 ${
+                    story.soon
+                      ? "bg-soft-brown/5 opacity-70"
+                      : "bg-white hover:shadow-md"
+                  }`}
                   style={{ border: "2px solid rgba(139, 154, 124, 0.15)" }}
                 >
                   <div className="flex items-center gap-4">
-                    <button
-                      onClick={() => toggleStory(story.id, story.src)}
-                      className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-transform duration-200 active:scale-95 hover:scale-105"
-                      style={{ backgroundColor: "var(--color-warm-terracotta)" }}
-                      aria-label={playing ? "Pause story" : "Play story"}
-                    >
-                      {playing ? (
-                        <Pause className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-white" />
-                      ) : (
-                        <Play className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-white ml-0.5" />
-                      )}
-                    </button>
+                    {story.soon ? (
+                      <div
+                        className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-soft-brown/20"
+                        aria-label="Coming soon"
+                      >
+                        <span className="text-xl">🔒</span>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => toggleStory(story.id, story.src)}
+                        className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-transform duration-200 active:scale-95 hover:scale-105"
+                        style={{ backgroundColor: "var(--color-warm-terracotta)" }}
+                        aria-label={playing ? "Pause story" : "Play story"}
+                      >
+                        {playing ? (
+                          <Pause className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-white" />
+                        ) : (
+                          <Play className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-white ml-0.5" />
+                        )}
+                      </button>
+                    )}
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center flex-wrap gap-2 mb-0.5">
                         <span className="text-xl">{story.emoji}</span>
-                        <h3 className="font-fredoka text-lg sm:text-xl text-dark-brown">
+                        <h3 className={`font-fredoka text-lg sm:text-xl ${story.soon ? "text-soft-brown" : "text-dark-brown"}`}>
                           {story.title}
                         </h3>
                       </div>
@@ -554,22 +576,30 @@ export default function Home() {
                     </div>
 
                     <div className="flex-shrink-0 text-right">
-                      <span
-                        className="inline-block font-quicksand text-xs font-semibold px-2.5 py-1 rounded-full mb-1"
-                        style={{
-                          backgroundColor: "rgba(139, 154, 124, 0.12)",
-                          color: "var(--color-sage-green)",
-                        }}
-                      >
-                        {story.category}
-                      </span>
-                      <p className="font-quicksand text-xs text-soft-brown/70">
-                        {formatTime(currentDuration)}
-                      </p>
+                      {story.soon ? (
+                        <span className="inline-block font-quicksand text-xs font-semibold px-2.5 py-1 rounded-full bg-soft-brown/20 text-soft-brown">
+                          Coming Soon
+                        </span>
+                      ) : (
+                        <>
+                          <span
+                            className="inline-block font-quicksand text-xs font-semibold px-2.5 py-1 rounded-full mb-1"
+                            style={{
+                              backgroundColor: "rgba(139, 154, 124, 0.12)",
+                              color: "var(--color-sage-green)",
+                            }}
+                          >
+                            {story.category}
+                          </span>
+                          <p className="font-quicksand text-xs text-soft-brown/70">
+                            {formatTime(currentDuration)}
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
 
-                  {activeStory === story.id && (
+                  {!story.soon && activeStory === story.id && (
                     <div className="mt-3">
                       <div
                         className="h-2 rounded-full overflow-hidden"
