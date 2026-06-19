@@ -342,7 +342,7 @@ export default function Home() {
               style={{ backgroundColor: "var(--color-golden-honey)" }}
             />
           </div>
-          <div className="relative w-full rounded-[20px] overflow-hidden bg-dark-brown aspect-video shadow-elevated">
+          <div className="relative w-full max-w-[480px] mx-auto rounded-[20px] overflow-hidden bg-dark-brown aspect-[9/16] shadow-elevated">
             <video
               src="/videos/welcome.mp4"
               poster="/daddy-gian-photo.jpg"
