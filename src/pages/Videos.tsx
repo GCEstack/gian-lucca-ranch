@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Play, Pause, Volume2, Heart, Home } from "lucide-react";
 
@@ -160,7 +160,7 @@ export default function Videos() {
 
   const selectVideo = (index: number) => {
     setSelectedIndex(index);
-    setPlaying(false);
+    setPlaying(true);
     setProgress(0);
     setCurrentTime(0);
     setLiked(false);
@@ -205,6 +205,19 @@ export default function Videos() {
     const s = Math.floor(sec % 60);
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
+
+  // Auto-play when the featured video changes and playing is requested
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !playing) return;
+    const playPromise = v.play();
+    if (playPromise) {
+      playPromise.catch(() => {
+        // Autoplay blocked by browser; show play overlay
+        setPlaying(false);
+      });
+    }
+  }, [featured.src, playing]);
 
   return (
     <div>
