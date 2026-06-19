@@ -35,6 +35,12 @@ async function generateStory(story, index) {
       text: story.text,
       modelId: "eleven_multilingual_v2",
       outputFormat: "mp3_44100_128",
+      voiceSettings: {
+        stability: 0.6,
+        similarityBoost: 0.75,
+        style: 0,
+        speed: 0.8,
+      },
     });
 
     const buffer = await streamToBuffer(audioStream);
