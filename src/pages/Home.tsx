@@ -81,7 +81,7 @@ const stories = [
     emoji: "🐻",
     category: "Bedtime",
     src: "/audio/story_sleepy_bear.m4a",
-    duration: 43,
+    duration: 58,
   },
   {
     id: "benny-adventure",
@@ -90,7 +90,7 @@ const stories = [
     emoji: "🐻",
     category: "Adventure",
     src: "/audio/story_benny_adventure.m4a",
-    duration: 36,
+    duration: 50,
   },
   {
     id: "chicken-dance",
@@ -99,7 +99,7 @@ const stories = [
     emoji: "🐔",
     category: "Fun",
     src: "/audio/story_chicken_dance.m4a",
-    duration: 32,
+    duration: 46,
   },
   {
     id: "tommy-turkey",
@@ -108,7 +108,7 @@ const stories = [
     emoji: "🦃",
     category: "Gratitude",
     src: "/audio/story_tommy_turkey.m4a",
-    duration: 33,
+    duration: 44,
   },
   {
     id: "ranch-morning",
@@ -117,7 +117,7 @@ const stories = [
     emoji: "🌅",
     category: "Routine",
     src: "/audio/story_ranch_morning.m4a",
-    duration: 33,
+    duration: 46,
   },
   {
     id: "starlight-lullaby",
@@ -126,7 +126,34 @@ const stories = [
     emoji: "🌙",
     category: "Bedtime",
     src: "/audio/story_starlight_lullaby.m4a",
-    duration: 44,
+    duration: 47,
+  },
+  {
+    id: "rainy-day-parade",
+    title: "The Rainy Day Parade",
+    description: "When rain ruins the picnic, the friends make their own parade!",
+    emoji: "🌧️",
+    category: "Fun",
+    src: "/audio/story_rainy_day_parade.m4a",
+    duration: 225,
+  },
+  {
+    id: "great-honey-harvest",
+    title: "The Great Honey Harvest",
+    description: "Benny and friends work together to collect the sweetest honey of the year.",
+    emoji: "🍯",
+    category: "Celebration",
+    src: "/audio/story_great_honey_harvest.m4a",
+    duration: 229,
+  },
+  {
+    id: "night-under-stars",
+    title: "Benny's Night Under the Stars",
+    description: "A cozy camping story about stars, fireflies, and Daddy's love.",
+    emoji: "⭐",
+    category: "Bedtime",
+    src: "/audio/story_night_under_stars.m4a",
+    duration: 230,
   },
 ];
 
