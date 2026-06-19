@@ -327,6 +327,33 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Welcome Video */}
+      <section className="py-16 sm:py-20 bg-cream">
+        <div className="max-w-[900px] mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8">
+            <span className="font-quicksand text-sm font-semibold uppercase tracking-[0.05em] text-sage-green block mb-3">
+              🎥 A SPECIAL HELLO
+            </span>
+            <h2 className="font-fredoka text-3xl sm:text-[40px] font-medium text-dark-brown">
+              Welcome From Daddy
+            </h2>
+            <div
+              className="w-[60px] h-[3px] rounded-full mx-auto mt-4"
+              style={{ backgroundColor: "var(--color-golden-honey)" }}
+            />
+          </div>
+          <div className="relative w-full rounded-[20px] overflow-hidden bg-dark-brown aspect-video shadow-elevated">
+            <video
+              src="/videos/welcome.mp4"
+              poster="/daddy-gian-photo.jpg"
+              controls
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Friends */}
       <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
