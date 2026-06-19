@@ -6,7 +6,7 @@ export default function Companion() {
           src="https://web-mobile-peter.vercel.app/"
           title="Gian Lucca's Companion"
           className="w-full h-full border-0"
-          allow="microphone; camera; fullscreen"
+          allow="microphone https://web-mobile-peter.vercel.app; camera https://web-mobile-peter.vercel.app; fullscreen https://web-mobile-peter.vercel.app"
           loading="lazy"
         />
       </div>
