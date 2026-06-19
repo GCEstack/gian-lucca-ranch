@@ -8,6 +8,7 @@ const navItems = [
   { to: "/learning", label: "Learning", icon: "🎨" },
   { to: "/stories", label: "Stories", icon: "📖" },
   { to: "/music", label: "Music", icon: "🎵" },
+  { to: "/companion", label: "Companion", icon: "🤖" },
 ];
 
 function DesktopNavItem({ to, label, icon }: { to: string; label: string; icon: string }) {
