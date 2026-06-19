@@ -455,6 +455,21 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          <div className="mt-10 max-w-[700px] mx-auto">
+            <div className="relative w-full rounded-[20px] overflow-hidden bg-dark-brown aspect-video shadow-elevated">
+              <video
+                src="/videos/lotso_baby_speaking.mp4"
+                poster="/lotso/lotso_baby.png"
+                controls
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <p className="text-center font-quicksand text-sm text-soft-brown mt-3">
+              🎥 Baby Lotso has something to say!
+            </p>
+          </div>
         </div>
       </section>
 
