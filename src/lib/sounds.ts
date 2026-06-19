@@ -6,7 +6,7 @@ const soundMap: Record<string, string> = {
   turkey: "/audio/turkey-gobble.mp3",
 };
 
-export function playAnimalSound(name: string) {
+export function playAnimalSound(name: string, onStart?: () => void) {
   const key = name.toLowerCase();
   let src: string | null = null;
 
@@ -21,6 +21,9 @@ export function playAnimalSound(name: string) {
     currentAudio.pause();
     currentAudio.currentTime = 0;
   }
+
+  // Notify the app so it can pause other media (videos, stories)
+  onStart?.();
 
   const audio = new Audio(src);
   currentAudio = audio;

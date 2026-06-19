@@ -4,6 +4,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Layout from "./components/Layout";
 import PasswordGate from "./components/PasswordGate";
+import { MediaProvider } from "./contexts/MediaContext";
 import Home from "./pages/Home";
 import Videos from "./pages/Videos";
 import Learning from "./pages/Learning";
@@ -31,7 +32,9 @@ const router = createHashRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PasswordGate>
-      <RouterProvider router={router} />
+      <MediaProvider>
+        <RouterProvider router={router} />
+      </MediaProvider>
     </PasswordGate>
   </StrictMode>,
 );

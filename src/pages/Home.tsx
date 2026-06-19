@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Play, Pause } from "lucide-react";
 import { playAnimalSound } from "../lib/sounds";
+import { useMedia } from "../contexts/MediaContext";
 
 const friends = [
   {
@@ -167,9 +168,12 @@ const stories = [
 ];
 
 export default function Home() {
+  const { playMedia, stopAll } = useMedia();
   const [temp] = useState(() => Math.floor(Math.random() * (78 - 70 + 1)) + 70);
   const heroRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const welcomeVideoRef = useRef<HTMLVideoElement>(null);
+  const lotsoVideoRef = useRef<HTMLVideoElement>(null);
   const [activeStory, setActiveStory] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -204,7 +208,7 @@ export default function Home() {
           audio.pause();
           setIsPlaying(false);
         } else {
-          audio.play().catch(() => {});
+          playMedia(id, audio);
           setIsPlaying(true);
         }
       }
@@ -217,7 +221,7 @@ export default function Home() {
       setActiveStory(id);
       setProgress(0);
       setDuration(0);
-      audio.play().catch(() => {});
+      playMedia(id, audio);
       setIsPlaying(true);
     }
   };
@@ -265,19 +269,19 @@ export default function Home() {
         {/* Side emojis */}
         <button
           type="button"
-          onClick={() => playAnimalSound("bear")}
+          onClick={() => playAnimalSound("bear", stopAll)}
           className="absolute hidden sm:inline-block text-[40px] left-[5%] top-[20%] hover:scale-110 transition-transform cursor-pointer"
           aria-label="Bear sound"
         >🐻</button>
         <button
           type="button"
-          onClick={() => playAnimalSound("chicken")}
+          onClick={() => playAnimalSound("chicken", stopAll)}
           className="absolute hidden sm:inline-block text-[40px] left-[5%] top-[50%] hover:scale-110 transition-transform cursor-pointer"
           aria-label="Chicken sound"
         >🐔</button>
         <button
           type="button"
-          onClick={() => playAnimalSound("turkey")}
+          onClick={() => playAnimalSound("turkey", stopAll)}
           className="absolute hidden sm:inline-block text-[40px] right-[5%] top-[25%] hover:scale-110 transition-transform cursor-pointer"
           aria-label="Turkey sound"
         >🦃</button>
@@ -353,10 +357,12 @@ export default function Home() {
           </div>
           <div className="relative w-full max-w-[480px] mx-auto rounded-[20px] overflow-hidden bg-dark-brown aspect-[9/16] shadow-elevated">
             <video
+              ref={welcomeVideoRef}
               src="/videos/welcome.mp4"
               poster="/daddy-gian-photo.jpg"
               controls
               playsInline
+              onPlay={() => welcomeVideoRef.current && playMedia("welcome-video", welcomeVideoRef.current)}
               className="absolute inset-0 w-full h-full object-cover"
             />
           </div>
@@ -372,10 +378,10 @@ export default function Home() {
               <div
                 key={friend.name}
                 className="group cursor-pointer"
-                onClick={() => playAnimalSound(friend.name)}
+                onClick={() => playAnimalSound(friend.name, stopAll)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && playAnimalSound(friend.name)}
+                onKeyDown={(e) => e.key === "Enter" && playAnimalSound(friend.name, stopAll)}
                 aria-label={`Play ${friend.name} sound`}
               >
                 <div
@@ -468,10 +474,12 @@ export default function Home() {
           <div className="mt-10 max-w-[700px] mx-auto">
             <div className="relative w-full rounded-[20px] overflow-hidden bg-dark-brown aspect-video shadow-elevated">
               <video
+                ref={lotsoVideoRef}
                 src="/videos/lotso_baby_speaking.mp4"
                 poster="/lotso/lotso_baby.png"
                 controls
                 playsInline
+                onPlay={() => lotsoVideoRef.current && playMedia("lotso-baby", lotsoVideoRef.current)}
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
