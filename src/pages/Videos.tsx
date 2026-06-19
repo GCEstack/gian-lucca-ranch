@@ -70,6 +70,30 @@ const stories = [
     duration: "",
     soon: true,
   },
+  {
+    title: "🌧️ The Rainy Day Parade",
+    desc: "When rain ruins the picnic, friends turn it into the best adventure ever!",
+    image: "/story-rainy-day-parade.png",
+    tag: "Adventure",
+    duration: "",
+    soon: true,
+  },
+  {
+    title: "🍯 The Great Honey Harvest",
+    desc: "The most special day of the year — collecting golden honey with friends!",
+    image: "/story-great-honey-harvest.png",
+    tag: "Celebration",
+    duration: "",
+    soon: true,
+  },
+  {
+    title: "⭐ Benny's Night Under the Stars",
+    desc: "Daddy takes Benny camping for the very first time. A magical night!",
+    image: "/story-night-under-stars.png",
+    tag: "Bedtime",
+    duration: "",
+    soon: true,
+  },
 ];
 
 export default function Videos() {
