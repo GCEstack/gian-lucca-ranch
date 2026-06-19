@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, Music, Home, Play } from "lucide-react";
+
+function generatePositions(count: number) {
+  return Array.from({ length: count }, () => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+  }));
+}
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -38,6 +45,7 @@ const shapes = [
 ];
 
 export default function Learning() {
+  const dotPositions = useMemo(() => generatePositions(15), []);
   const [learnedLetters, setLearnedLetters] = useState<string[]>([]);
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
   const [mixedColor, setMixedColor] = useState<string | null>(null);
@@ -69,11 +77,11 @@ export default function Learning() {
         }}
       >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {Array.from({ length: 15 }).map((_, i) => (
+          {dotPositions.map((pos, i) => (
             <div
               key={i}
               className="absolute w-2 h-2 rounded-full bg-sage-green/20"
-              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+              style={{ left: pos.left, top: pos.top }}
             />
           ))}
         </div>

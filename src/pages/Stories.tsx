@@ -1,6 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Music, Home, ChevronLeft, ChevronRight } from "lucide-react";
+
+function generateStarPositions(count: number) {
+  return Array.from({ length: count }, () => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+  }));
+}
 
 const storybooks = [
   {
@@ -65,6 +72,7 @@ const pages = [
 ];
 
 export default function Stories() {
+  const starPositions = useMemo(() => generateStarPositions(20), []);
   const [page, setPage] = useState(0);
   const [answer, setAnswer] = useState<string | null>(null);
   const [dream, setDream] = useState("");
@@ -325,11 +333,11 @@ export default function Stories() {
         style={{ backgroundColor: "var(--color-dark-brown)" }}
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {Array.from({ length: 20 }).map((_, i) => (
+          {starPositions.map((pos, i) => (
             <span
               key={i}
               className="absolute text-lg text-white/20"
-              style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+              style={{ left: pos.left, top: pos.top }}
             >
               ⭐
             </span>

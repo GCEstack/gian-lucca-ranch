@@ -1,6 +1,15 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Play, Pause, Volume2, Heart, Home } from "lucide-react";
+
+function generateBubbleStyles(count: number) {
+  return Array.from({ length: count }, () => ({
+    width: `${Math.random() * 10 + 4}px`,
+    height: `${Math.random() * 10 + 4}px`,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+  }));
+}
 
 const featured = {
   title: "The Sleepy Little Bear",
@@ -67,7 +76,9 @@ export default function Videos() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const [liked, setLiked] = useState(false);
+  const bubbleStyles = useMemo(() => generateBubbleStyles(20), []);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -82,6 +93,7 @@ export default function Videos() {
   const handleTimeUpdate = () => {
     const v = videoRef.current;
     if (!v) return;
+    setCurrentTime(v.currentTime);
     setProgress((v.currentTime / v.duration) * 100);
   };
 
@@ -109,16 +121,11 @@ export default function Videos() {
         }}
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {Array.from({ length: 20 }).map((_, i) => (
+          {bubbleStyles.map((style, i) => (
             <span
               key={i}
               className="absolute rounded-full bg-white/30"
-              style={{
-                width: `${Math.random() * 10 + 4}px`,
-                height: `${Math.random() * 10 + 4}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
+              style={style}
             />
           ))}
         </div>
@@ -192,7 +199,7 @@ export default function Videos() {
                   )}
                 </button>
                 <span className="font-quicksand text-xs text-white flex-shrink-0 hidden sm:inline">
-                  {videoRef.current ? formatTime(videoRef.current.currentTime) : "0:00"}
+                  {formatTime(currentTime)}
                 </span>
                 <div
                   className="flex-1 h-1.5 rounded-full cursor-pointer relative bg-white/30"

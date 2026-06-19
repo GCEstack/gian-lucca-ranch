@@ -131,18 +131,13 @@ const stories = [
 ];
 
 export default function Home() {
-  const [temp, setTemp] = useState(75);
+  const [temp] = useState(() => Math.floor(Math.random() * (78 - 70 + 1)) + 70);
   const heroRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [activeStory, setActiveStory] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-
-  useEffect(() => {
-    const t = Math.floor(Math.random() * (78 - 70 + 1)) + 70;
-    setTemp(t);
-  }, []);
 
   useEffect(() => {
     const audio = audioRef.current;

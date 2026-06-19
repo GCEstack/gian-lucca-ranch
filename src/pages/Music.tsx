@@ -55,6 +55,7 @@ export default function Music() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const [liked, setLiked] = useState(false);
 
   const togglePlay = () => {
@@ -70,6 +71,7 @@ export default function Music() {
   const handleTimeUpdate = () => {
     const a = audioRef.current;
     if (!a) return;
+    setCurrentTime(a.currentTime);
     setProgress((a.currentTime / a.duration) * 100);
   };
 
@@ -202,7 +204,7 @@ export default function Music() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between font-quicksand text-xs text-soft-brown">
-                  <span>{audioRef.current ? formatTime(audioRef.current.currentTime) : "0:00"}</span>
+                  <span>{formatTime(currentTime)}</span>
                   <span>0:10</span>
                 </div>
               </div>
