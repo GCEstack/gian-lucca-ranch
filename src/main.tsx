@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Layout from "./components/Layout";
+import PasswordGate from "./components/PasswordGate";
 import Home from "./pages/Home";
 import Videos from "./pages/Videos";
 import Learning from "./pages/Learning";
@@ -29,6 +30,8 @@ const router = createHashRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+    <PasswordGate>
+      <RouterProvider router={router} />
+    </PasswordGate>
+  </StrictMode>,
 );
